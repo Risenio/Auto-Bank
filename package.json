@@ -1,0 +1,10 @@
+{
+	"main": "index.js",
+	"name": "auto-bank",
+	"author": "Risenio",
+	"description": "A script that auto merges inventory items to bank if same item exists in bank/special storage/wardrobe/etc's tab.",
+	"version": "*",
+	"homepage": "https://github.com/Risenio/Auto-Bank/blob/master/README.md",
+	"keywords": ["tera", "tera-proxy", "tera-online", "fps-utils", "automatic"],
+	"repository": { "type":	"git", "url": "git+https://github.com/Risenio/Auto-Bank.git" }
+}

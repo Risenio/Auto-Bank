@@ -1,0 +1,13 @@
+{
+    "disableAutoUpdate": false,
+    "name": "Auto-Bank",
+    "author": "Risenio",
+    "homepage": "https://github.com/Risenio/Auto-Bank/blob/master/README.md",
+    "description": "A script that auto merges inventory items to bank if same item exists in bank/special storage/wardrobe/etc's tab.",
+    "version": "*",
+    "options": {
+        "niceName": "AutoBank",
+        "guiName": "Auto Bank"
+    },
+    "servers": ["https://raw.githubusercontent.com/Risenio/Auto-Bank/master/"]
+}
