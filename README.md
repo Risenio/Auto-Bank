@@ -1,5 +1,5 @@
 # Auto-Bank
-  A tera-proxy module that auto merges inventory items to bank if same item exists in bank/special storage/wardrobe/guild bank/etc.'s tab.
+  A script that auto merges inventory items to bank if same item exists in bank/special storage/wardrobe/guild bank/etc.'s tab.
 
 # Usage
   1. Use command `autobank`/`ab` to toggle banking.
@@ -78,5 +78,5 @@
 ## Proof of concept
   <details>
 
-![Short Gif](https://i.imgur.com/KvW3v0F.gif)
+![img](https://i.imgur.com/Pq25apV.gif)
   </details>
