@@ -74,3 +74,9 @@
       - If you're using Caali's proxy(toolbox), you don't have to do anything, as this comes along-with by default.
       - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`proxy dir/mods`).
 
+
+## Proof of concept
+  <details>
+
+![Short Gif](https://i.imgur.com/KvW3v0F.gif)
+  </details>
