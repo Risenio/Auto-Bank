@@ -15,16 +15,13 @@
     * `ab bl <add/+/-/remove>`:
       - There are 3 different ways to blacklist or unblacklist an item:
         1. Followed by writing the id of item(s), if more than one, use space as separation between each, e.g.
-          > `ab bl add 1 2 3 4 5`
-          > `ab bl rem 1 2 3 4 5`
+          > `ab bl add 1 2 3 4 5`<br>`ab bl rem 1 2 3 4 5`
         2. Followed by linked items (ctrl+left click), any amount of items, if more than one, spacing doesn't matter here (you may add space or not).
-          > `ab bl add <item1> <item2> <item3>...`
-          > `ab bl rem <item1> <item2> <item3>...`
+          > `ab bl add <item1> <item2> <item3>...`<br>`ab bl rem <item1> <item2> <item3>...`
         3. If no arguments, it will enable (un)blacklisting;
-          > `ab bl add` ~ Toggles blacklisting.
-          > `ab bl rem` ~ Toggles unblacklisting.
-            - Open bank, then try add that item to bank to (un)blacklist it. 
-              * Note: Item will not be banked while this enabled.
+          > `ab bl add` ~ Toggles blacklisting.<br>`ab bl rem` ~ Toggles unblacklisting.
+          - Open bank, then try add that item to bank to (un)blacklist it.
+            * Note: Item will not be banked while this enabled.
     * `ab bl <reset/default>`:
       - This command resets the blacklist to the [default blacklist](##Blacklist).
     * `ab bl <clear/empty>`:
