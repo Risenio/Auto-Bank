@@ -14,12 +14,17 @@ if (fs.existsSync(fn)) fs.watch(fn, event => { if (event === 'change') ReadFile(
 module.exports = function AutoBank(mod) {
 
 	const NotCP = typeof mod.compileProto !== 'undefined'
-	if (NotCP) return //Lets see if pinkie will update defs anytime soon.
+	const defs = { cPutWareItem: 3, sViewWareEx: 2 }
 
-	// ** Initialize dependency ** \\	
+	if (NotCP) {
+		defs.cPutWareItem = mod.compileProto('uint64 gameId\nint32 container\nint32 offset\nint64 money\nint32 fromPocket\nint32 fromSlot\nint32 id\nuint64 dbid\nint32 amount\nint32 toSlot')
+		defs.sViewWareEx = mod.compileProto('array items\n- array<int32> crystals\n- int32 id\n- uint64 dbid\n- uint64 ownerId\n- int32 container\n- int32 pocket\n- uint32 slot\n- int32 amountTotal\n- int32 amount\n- int32 enchant\n- int32 durability\n- bool soulbound\n- uint32 unk\n- bool masterwork\n- int32 enigma\n- int32 enchantAdvantage\n- int32 enchantBonus\n- int32 enchantBonusMaxPlus\n- bool awakened\n- int32 liberationStatus\nuint64 gameId\nint32 container\nint32 action\nint32 offset\nint32 maxUsedSlot\nint32 numUsedSlots\nint64 money\nint16 numUnlockedSlots')
+	}
+
+	// ** Initialize dependency ** \\
 	mod.game.initialize('inventory')
 
-	// ** Variables ** \\	
+	// ** Variables ** \\
 
 	let enabled = false,
 		GuildBanking = false,
@@ -36,7 +41,7 @@ module.exports = function AutoBank(mod) {
 	function sViewWareEx(event) {
 		if (!enabled) return
 		if (lastBankedPageOffset >= event.offset) return false
-		if (!GuildBanking && event.container === 3) return Msg('Banking to guild bank is disabled.')
+		if (!GuildBanking && event.container === 3) return Msg('Banking to guild bank is <font color="#FE6F5E">disabled</font>.')
 		let toBankItems = []
 		if (event.items.length > 0 && mod.game.inventory.items.length > 0) {
 			lastBankedPageOffset = event.offset
@@ -61,7 +66,7 @@ module.exports = function AutoBank(mod) {
 			toBankItems = toUniqueDbidArr(toBankItems)
 			toBankItems = remvBlacklisted(toBankItems)
 			for (const toBank of toBankItems)
-				mod.toServer('C_PUT_WARE_ITEM', 3, { gameId: mod.game.me.gameId, container: event.container, offset: event.offset, fromPocket: toBank.pocket, fromSlot: toBank.slot, id: toBank.id, dbid: toBank.dbid, amount: toBank.amount, toSlot: event.offset })
+				mod.toServer('C_PUT_WARE_ITEM', defs.cPutWareItem, { gameId: mod.game.me.gameId, container: event.container, offset: event.offset, fromPocket: toBank.pocket, fromSlot: toBank.slot, id: toBank.id, dbid: toBank.dbid, amount: toBank.amount, toSlot: event.offset })
 		}
 		mod.setTimeout(() => {
 			if (!enabled) return
@@ -71,20 +76,11 @@ module.exports = function AutoBank(mod) {
 	}
 	function cPutWareItem({ id }) {
 		if (AddToBl) {
-			if (blacklist.indexOf(id) === -1) {
-				blacklist.push(id)
-				Msg(`The item '${convToCLA(id)}' was <font color="#4DE19C">Added</font> to blacklist.`)
-			}
-			else Msg(`The item '${convToCLA(id)}' is Already blacklisted.`)
+			addToBl(id)
 			return false
 		}
 		if (RmvFromBl) {
-			const blItemIndex = blacklist.indexOf(id)
-			if (blItemIndex !== -1) {
-				blacklist.splice(blItemIndex, 1)
-				Msg(`The item '${convToCLA(id)}' was <font color="#FE6F5E">Removed</font> from blacklist.`)
-			}
-			else Msg(`The item '${convToCLA(id)}' is Not blacklisted.`)
+			rmvFromBl(id)
 			return false
 		}
 	}
@@ -99,8 +95,8 @@ module.exports = function AutoBank(mod) {
 
 	// ** Hooks ** \\
 
-	mod.hook('S_VIEW_WARE_EX', 2, sViewWareEx)
-	mod.hook('C_PUT_WARE_ITEM', 3, cPutWareItem)
+	mod.hook('S_VIEW_WARE_EX', defs.sViewWareEx, sViewWareEx)
+	mod.hook('C_PUT_WARE_ITEM', defs.cPutWareItem, cPutWareItem)
 	mod.hook('S_REQUEST_CONTRACT', 1, sRequestContract)
 	mod.hook('S_CANCEL_CONTRACT', 1, sCancelContract)
 	//mod.hook('S_SYSTEM_MESSAGE', 1, sSytemMessage)
@@ -128,6 +124,12 @@ module.exports = function AutoBank(mod) {
 	}
 	function convToCLA(id) {
 		return `<font color="#7289DA"><ChatLinkAction param="1#####${id}">&lt;ID=${id}&gt;</ChatLinkAction></font>`
+	}
+	function validIdOrCLA(str) {
+		const [...match] = str.matchAll(/<ChatLinkAction.+?1#####([0-9]+).*?<\/ChatLinkAction>|(^[0-9]+|\s[0-9]+|[0-9]+\s)/gm)
+		let res = []
+		for (const m of match) res.push(Number.parseInt(m[1] || m[2]))
+		return res
 	}
 
 	const Msg = msg => mod.command.message(`${NotCP ? '[Auto-Bank]' : ''} ${msg}`),
@@ -157,11 +159,35 @@ module.exports = function AutoBank(mod) {
 			if (RmvFromBl && AddToBl) toggleAddToBl()
 			Msg(`Removing from Blacklist <font color="#${RmvFromBl ? `4DE19C">En` : `FE6F5E">Dis`}abled</font>.`)
 			if (!RmvFromBl) saveBlacklistFile()
+		},
+		addToBl = (...ids) => {
+			const str = ids.join(' '), res = validIdOrCLA(str)
+			if (!res.length) return Msg(`The argument(s) <font color="#FE6F5E">doesn't contain</font> valid id/itemLink to be blacklisted.\nGiven: '${str}'`)
+			for (const id of res)
+				if (blacklist.indexOf(id) === -1) {
+					blacklist.push(id)
+					Msg(`The item ${convToCLA(id)} was <font color="#4DE19C">Added</font> to blacklist.`)
+				}
+				else Msg(`The item ${convToCLA(id)} is <font color="#AB58F4">Already</font> blacklisted.`)
+			saveBlacklistFile()
+		},
+		rmvFromBl = (...ids) => {
+			const str = ids.join(' '), res = validIdOrCLA(str)
+			if (!res.length) return Msg(`The argument(s) <font color="#FE6F5E">doesn't contain</font> valid id/itemLink to be unblacklisted.\nGiven: '${str}'`)
+			for (const id of res) {
+				const blItemIndex = blacklist.indexOf(id)
+				if (blItemIndex !== -1) {
+					blacklist.splice(blItemIndex, 1)
+					Msg(`The item ${convToCLA(id)} was <font color="#FE6F5E">Removed</font> from blacklist.`)
+				}
+				else Msg(`The item ${convToCLA(id)} is <font color="#AB58F4">Not</font> blacklisted.`)
+			}
+			saveBlacklistFile()
 		}
 
 	// ** Command ** \\
 
-	mod.command.add(['autobank', 'ab'], (key) => {
+	mod.command.add(['autobank', 'ab'], (key, arg, ...args) => {
 		if (key) key = key.toLowerCase()
 		switch (key) {
 			case 'guild': case 'g':
@@ -169,10 +195,38 @@ module.exports = function AutoBank(mod) {
 				Msg(`Banking to Guild Bank is <font color="#${GuildBanking ? `4DE19C">En` : `FE6F5E">Dis`}abled</font>.`)
 				break
 			case 'blacklist': case 'bl':
-				toggleAddToBl()
+				switch (arg) {
+					case 'add': case '+':
+						if (!args.length) toggleAddToBl()
+						else addToBl(...args)
+						break
+					case 'remove': case 'rem': case 'rm': case '-':
+						if (!args.length) toggleRmvFromBl()
+						else rmvFromBl(...args)
+						break
+					case 'reset': case 'default':
+						blacklist = defaultBl
+						saveBlacklistFile()
+						Msg(`Blacklist has been reset to default.`)
+						break
+					case 'clear': case 'empty':
+						blacklist = []
+						saveBlacklistFile()
+						Msg(`Blacklist has been cleared.`)
+						break
+					case 'list':
+						let bll = blacklist.length
+						Msg(`Blacklist has ${bll} items.`)
+						while (bll--)
+							Msg(`\t- ${convToCLA(blacklist[bll])}`)
+						break
+					default:
+						Msg('Invalid blacklist command, please refer to the readme.')
+						break
+				}
 				break
 			case 'rmblacklist': case 'rmvblacklist': case 'rmbl': case 'rmvbl':
-				toggleRmvFromBl()
+				Msg('<font color="#FE6F5E">Deprecated command</font>, please use `<font color="#AB58F4">ab bl rem \<items?...\></font>` instead!')
 				break
 			default:
 				if (!enabled) {

@@ -1,29 +1,43 @@
 # Auto-Bank
   A script that auto merges inventory items to bank if same item exists in bank/special storage/wardrobe/guild bank/etc.'s tab.
 
-# Usage
+## Usage
   1. Use command `autobank`/`ab` to toggle banking.
   2. Open bank or click on bank tab to begin.
   3. That's it. It will automatically check all pages in the bank you've open, and once it ends, it will close the bank for you.
 
 ## Commands
-  All commands starts with `autobank` or `ab` as alternative.
+  All commands start with `autobank` or `ab` as alternative.
 
-  - `autobank` or `ab` to start.
+  - `autobank` or `ab` + open storage space (bank/extra storage or wardrobe, etc) ~ Starts the auto-banking process.
   ---
-  - `autobank <blacklist/bl>` toggles adding to blacklist.
-    * Open bank, and then try add that item to bank to blacklist. 
-      * Note: Item will not be banked while adding to blacklist.
-  ---
-  - `ab <rmvblacklist/rmbl>` toggles removing from blacklist.
-    * Open bank, and then try add that item to bank to remove it from blacklist.
-      * Note: Item will not be banked while removing from blacklist.
+  - `ab bl <add/rem/reset/clear>` ~ Manages blacklist.
+    * `ab bl <add/+/-/remove>`:
+      - There are 3 different ways to blacklist or unblacklist an item:
+        1. Followed by writing the id of item(s), if more than one, use space as separation between each, e.g.
+          > `ab bl add 1 2 3 4 5`
+          > `ab bl rem 1 2 3 4 5`
+        2. Followed by linked items (ctrl+left click), any amount of items, if more than one, spacing doesn't matter here (you may add space or not).
+          > `ab bl add <item1> <item2> <item3>...`
+          > `ab bl rem <item1> <item2> <item3>...`
+        3. If no arguments, it will enable (un)blacklisting;
+          > `ab bl add` ~ Toggles blacklisting.
+          > `ab bl rem` ~ Toggles unblacklisting.
+            - Open bank, then try add that item to bank to (un)blacklist it. 
+              * Note: Item will not be banked while this enabled.
+    * `ab bl <reset/default>`:
+      - This command resets the blacklist to the [default blacklist](##Blacklist).
+    * `ab bl <clear/empty>`:
+      - This will empty up the entire blacklist, to have 0 blacklisted items.
+    * `ab bl list`:
+      - Lists all the items that are currently blacklisted.
   ---
   - `autobank <guild/g>` toggles banking to guild bank. **Default Off**. 
 
 ## Blacklist
-  If no blacklist.json file was found, it will be using default blacklist.
-    - Editing/modifying the blacklist using blacklisting commands will saved into `blacklist.json` file.
+  If no blacklist.json file is found, it will be using the default blacklist.
+  - Editing/modifying the blacklist using blacklisting commands will be saved into the `blacklist.json` file.
+  - You can get the id of any item from [this site](https://teralore.com/en/).
   <details>
     <summary><b>Default blacklist</b></summary>
   
@@ -67,12 +81,12 @@
   - ID: 206051  - [Popori Figurine](https://teralore.com/en/item/206051)
   </details>
 
-## Capability.
-  * Should work on any proxy. (Currently awaiting update def for Pinkie's).
+## Capability
+  * Should work on any proxy.
   * 1 dependency;
     - tera-game-state
       - If you're using Caali's proxy(toolbox), you don't have to do anything, as this comes along-with by default.
-      - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`proxy dir/mods`).
+      - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`[proxy dir]/mods`).
 
 
 ## Proof of concept
