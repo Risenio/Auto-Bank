@@ -23,11 +23,11 @@
           - Open bank, then try add that item to bank to (un)blacklist it.
             * Note: Item will not be banked while this enabled.
     * `ab bl <reset/default>`:
-      - This command resets the blacklist to the [default blacklist](##Blacklist).
+      - This command resets the blacklist to the [default blacklist](#Blacklist).
     * `ab bl <clear/empty>`:
       - This will empty up the entire blacklist, to have 0 blacklisted items.
     * `ab bl list`:
-      - Lists all the items that are currently blacklisted.
+      - Lists all the items that are currently blacklisted. (The items in blue are clickable links, you can click it to show the item.)
   ---
   - `autobank <guild/g>` toggles banking to guild bank. **Default Off**. 
 
@@ -85,6 +85,8 @@
       - If you're using Caali's proxy(toolbox), you don't have to do anything, as this comes along-with by default.
       - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`[proxy dir]/mods`).
 
+## Additional information
+  It will also send a warning if the same exact item is available in more than one page (i.e. Dublicate) in your storage space. (the warning will include a blue clickable links, you can click it to show the item).
 
 ## Proof of concept
   <details>

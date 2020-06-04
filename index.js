@@ -12,7 +12,6 @@ ReadFile()
 if (fs.existsSync(fn)) fs.watch(fn, event => { if (event === 'change') ReadFile() })
 
 module.exports = function AutoBank(mod) {
-
 	const NotCP = typeof mod.compileProto !== 'undefined'
 	const defs = { cPutWareItem: 3, sViewWareEx: 2 }
 
@@ -55,9 +54,10 @@ module.exports = function AutoBank(mod) {
 							dub2Slot = bankItemDub.slot - bankItemDub.offset + 1
 
 						if (dubItem.offset !== event.offset) QueuedMsgs.push(`${convToCLA(dubItem.id)} | First (${dubItem.offset / 72 + 1}:${getLine(dub1Slot)}:${dub1Slot !== 8 ? dub1Slot % 8 : 8}) ^ Second (${bankItemDub.offset / 72 + 1}:${getLine(dub2Slot)}:${dub2Slot !== 8 ? dub2Slot % 8 : 8})`)
+					} else {
+						AllCurrentBankItems.push(bankItemDub)
+						AllCurrentBankItemsIds.push(bankItemDub.id)
 					}
-					AllCurrentBankItems.push(bankItemDub)
-					AllCurrentBankItemsIds.push(bankItemDub.id)
 				}
 				const found = mod.game.inventory.findAllInBagOrPockets(bankItem.id)
 				if (found && found.length)
@@ -125,9 +125,8 @@ module.exports = function AutoBank(mod) {
 	function convToCLA(id) {
 		return `<font color="#7289DA"><ChatLinkAction param="1#####${id}">&lt;ID=${id}&gt;</ChatLinkAction></font>`
 	}
-	function validIdOrCLA(str) {
+	function validIdOrCLA(str, res = []) {
 		const [...match] = str.matchAll(/<ChatLinkAction.+?1#####([0-9]+).*?<\/ChatLinkAction>|(^[0-9]+|\s[0-9]+|[0-9]+\s)/gm)
-		let res = []
 		for (const m of match) res.push(Number.parseInt(m[1] || m[2]))
 		return res
 	}
@@ -189,6 +188,7 @@ module.exports = function AutoBank(mod) {
 
 	mod.command.add(['autobank', 'ab'], (key, arg, ...args) => {
 		if (key) key = key.toLowerCase()
+		if (arg) arg = arg.toLowerCase()
 		switch (key) {
 			case 'guild': case 'g':
 				GuildBanking = !GuildBanking
