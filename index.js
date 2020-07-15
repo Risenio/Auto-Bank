@@ -31,9 +31,8 @@ module.exports = function AutoBank(mod) {
 		RmvFromBl = false,
 		curBankContractId = -1,
 		lastBankedPageOffset = -1,
-		QueuedMsgs = [],
-		AllCurrentBankItems = [],
-		AllCurrentBankItemsIds = []
+		QueuedDups = new Map(),
+		AllCurBankItems = new Map()
 
 	// ** Hook Functions ** \\
 
@@ -46,18 +45,13 @@ module.exports = function AutoBank(mod) {
 			lastBankedPageOffset = event.offset
 			for (const bankItem of event.items) {
 				{
-					const bankItemDub = { offset: event.offset, id: bankItem.id, slot: bankItem.slot },
-						dubIndex = AllCurrentBankItemsIds.indexOf(bankItemDub.id)
-					if (dubIndex !== -1) {
-						const dubItem = AllCurrentBankItems[dubIndex],
-							dub1Slot = dubItem.slot - dubItem.offset + 1,
-							dub2Slot = bankItemDub.slot - bankItemDub.offset + 1
-
-						if (dubItem.offset !== event.offset) QueuedMsgs.push(`${convToCLA(dubItem.id)} | First (${dubItem.offset / 72 + 1}:${getLine(dub1Slot)}:${dub1Slot !== 8 ? dub1Slot % 8 : 8}) ^ Second (${bankItemDub.offset / 72 + 1}:${getLine(dub2Slot)}:${dub2Slot !== 8 ? dub2Slot % 8 : 8})`)
-					} else {
-						AllCurrentBankItems.push(bankItemDub)
-						AllCurrentBankItemsIds.push(bankItemDub.id)
-					}
+					if (AllCurBankItems.has(bankItem.id)) {
+						const dupItem = AllCurBankItems.get(bankItem.id)
+						if (dupItem.offset !== event.offset)
+							QueuedDups.has(dupItem.id) ?
+								QueuedDups.get(dupItem.id).count++ :
+								QueuedDups.set(dupItem.id, { count: 1, link: convToCLA(dupItem.id), details1: getDetails(dupItem.offset, dupItem.slot), details2: getDetails(event.offset, bankItem.slot) })
+					} else AllCurBankItems.set(bankItem.id, { offset: event.offset, id: bankItem.id, slot: bankItem.slot })
 				}
 				const found = mod.game.inventory.findAllInBagOrPockets(bankItem.id)
 				if (found && found.length)
@@ -122,8 +116,12 @@ module.exports = function AutoBank(mod) {
 			m++
 		return m
 	}
+	function getDetails(a, b, s = 0) {
+		s = b - a + 1
+		return `${a / 72 + 1}:${getLine(s)}:${s % 8 || 8}`
+	}
 	function convToCLA(id) {
-		return `<font color="#7289DA"><ChatLinkAction param="1#####${id}">&lt;ID=${id}&gt;</ChatLinkAction></font>`
+		return `<font color="#7289DA"><ChatLinkAction param="1#####${id}">&lt;Click Me&gt;</ChatLinkAction></font>`
 	}
 	function validIdOrCLA(str, res = []) {
 		const [...match] = str.matchAll(/<ChatLinkAction.+?1#####([0-9]+).*?<\/ChatLinkAction>|(^[0-9]+|\s[0-9]+|[0-9]+\s)/gm)
@@ -135,15 +133,17 @@ module.exports = function AutoBank(mod) {
 		resetValues = () => {
 			if (AddToBl) toggleAddToBl()
 			if (RmvFromBl) toggleRmvFromBl()
-			if (QueuedMsgs.length) {
+			if (QueuedDups.size) {
 				Msg(`[Warning] <font color="#FE6F5E">Duplicate</font> items were found in your bank (page:line:slot).`)
-				for (const msg of QueuedMsgs) Msg(`\t- ${msg}`)
+				if (QueuedDups.size < 50)
+					for (const d of QueuedDups.values())
+						Msg(`- ${d.count}x${d.link} | (${d.details1}) & (${d.details2})`)
+				else Msg(`Over 50 items; won't be listed to prevent spam.`)
 			}
 			if (enabled) Msg('Auto Banking is <font color="#FE6F5E">disabled</font>.')
 			enabled = false
-			QueuedMsgs.length = 0
-			AllCurrentBankItems.length = 0
-			AllCurrentBankItemsIds.length = 0
+			QueuedDups.clear()
+			AllCurBankItems.clear()
 			lastBankedPageOffset = -1
 		},
 		saveBlacklistFile = () => fs.writeFileSync(fn, JSON.stringify(blacklist.sort((a, b) => a - b)), err => { ReadFile(); if (err) console.log(err) }),
