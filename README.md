@@ -88,12 +88,12 @@
 ## Additional information
   It will also send a warning if the same exact item is available in more than one page (i.e. Duplicate) in your storage space. (the warning will include a blue clickable links, you can click it to show the item).
 
-  * FAQ
-    ? It have banked an item for me, and now I can't withdraw it with "That item isn't in your bank" error.
-    A: This is unrelated to script, simply you have same item, but 2 different time remaining, so make sure you don't withdraw with quantity or by right clicking on wrong stacks.
-    ? It have banked all the way until full page and continued in next page.
-    ? It have banked same item in 2 different pages.
-    A: Its impossible, script will never bank an item in different page, even if page is full. (Make sure you don't already have that item in different pages, aka see duplicate log).
+  * FAQ<br>
+    - ? It have banked an item for me, and now I can't withdraw it with "That item isn't in your bank" error.
+      - A: This is unrelated to script, simply you have same item, but 2 different time remaining, so make sure you don't withdraw with quantity or by right clicking on wrong stack of that item.
+    - ? It have banked all the way until full page and continued in next page.
+    - ? It have banked same item in 2 different pages.
+      - A: Its impossible, script will never bank an item in different page, even if page is full. (Make sure you don't already have that item in different pages, aka see duplication log).
 
 ## Proof of concept
   <details>

@@ -31,6 +31,7 @@ module.exports = function AutoBank(mod) {
 		RmvFromBl = false,
 		curBankContractId = -1,
 		lastBankedPageOffset = -1,
+		warningStack = -1,
 		QueuedDups = new Map(),
 		AllCurBankItems = new Map()
 
@@ -133,7 +134,8 @@ module.exports = function AutoBank(mod) {
 		resetValues = () => {
 			if (AddToBl) toggleAddToBl()
 			if (RmvFromBl) toggleRmvFromBl()
-			if (QueuedDups.size) {
+			if (QueuedDups.size && warningStack !== QueuedDups.size) {
+				warningStack = QueuedDups.size
 				Msg(`[Warning] <font color="#FE6F5E">Duplicate</font> items were found in your bank (page:line:slot).`)
 				if (QueuedDups.size < 50)
 					for (const d of QueuedDups.values())
