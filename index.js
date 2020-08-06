@@ -13,11 +13,11 @@ if (fs.existsSync(fn)) fs.watch(fn, event => { if (event === 'change') ReadFile(
 
 module.exports = function AutoBank(mod) {
 	const NotCP = typeof mod.compileProto !== 'undefined'
-	const defs = { cPutWareItem: 3, sViewWareEx: 2 }
+	const defs = { cPutWareItem: 3, sViewWareEx: mod.majorPatchVersion < 96 ? 2 : 3 }
 
 	if (NotCP) {
 		defs.cPutWareItem = mod.compileProto('uint64 gameId\nint32 container\nint32 offset\nint64 money\nint32 fromPocket\nint32 fromSlot\nint32 id\nuint64 dbid\nint32 amount\nint32 toSlot')
-		defs.sViewWareEx = mod.compileProto('array items\n- array<int32> crystals\n- int32 id\n- uint64 dbid\n- uint64 ownerId\n- int32 container\n- int32 pocket\n- uint32 slot\n- int32 amountTotal\n- int32 amount\n- int32 enchant\n- int32 durability\n- bool soulbound\n- uint32 unk\n- bool masterwork\n- int32 enigma\n- int32 enchantAdvantage\n- int32 enchantBonus\n- int32 enchantBonusMaxPlus\n- bool awakened\n- int32 liberationStatus\nuint64 gameId\nint32 container\nint32 action\nint32 offset\nint32 maxUsedSlot\nint32 numUsedSlots\nint64 money\nint16 numUnlockedSlots')
+		defs.sViewWareEx = mod.compileProto('array items\n- array<int32> crystals\n- int32 id\n- uint64 dbid\n- uint64 ownerId\n- int32 container\n- int32 pocket\n- uint32 slot\n- int32 amountTotal\n- int32 amount\n- int32 enchant\n- int32 durability\n- bool soulbound\n- uint32 unk\n- bool masterwork\n- int32 enigma\n- int32 enchantAdvantage\n- int32 enchantBonus\n- int32 enchantBonusMaxPlus\n- bool awakened\n- int32 liberationStatus\n- int64 availableUntil ^96\nuint64 gameId\nint32 container\nint32 action\nint32 offset\nint32 maxUsedSlot\nint32 numUsedSlots\nint64 money\nint16 numUnlockedSlots')
 	}
 
 	// ** Initialize dependency ** \\
