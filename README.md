@@ -17,11 +17,13 @@
         1. Followed by writing the id of item(s), if more than one, use space as separation between each, e.g.
           > `ab bl add 1 2 3 4 5`<br>`ab bl rem 1 2 3 4 5`
         2. Followed by linked items (ctrl+left click), any amount of items, if more than one, spacing doesn't matter here (you may add space or not).
-          > `ab bl add <item1> <item2> <item3>...`<br>`ab bl rem <item1> <item2> <item3>...`
-        3. If no arguments, it will enable (un)blacklisting;
-          > `ab bl add` ~ Toggles blacklisting.<br>`ab bl rem` ~ Toggles unblacklisting.
+          > `ab bl ad <item1> <item2> <item3>`<br>`ab bl rm <item1> <item2> <item3>`
+        3. If you omit arguments, it will enable (un)blacklisting;
+          > `ab bl +` ~ Toggles blacklisting.<br>`ab bl rmv` ~ Toggles unblacklisting.
           - Open bank, then try add that item to bank to (un)blacklist it.
             * Note: Item will not be banked while this enabled.
+        ○ ○ If you want to blacklist entire pocket tab, say you want to keep superior items there, don't want them to get banked at all, no matter if they exist in bank or blacklist or not, you can do that using: (case-insensitive)
+          > `ab bl + pocket1 PocKet2 pocket3`<br>`ab bl - pocKET1 pocket2 pocket3`
     * `ab bl <reset/default>`:
       - This command resets the blacklist to the [default blacklist](#Blacklist).
     * `ab bl <clear/empty>`:
@@ -32,7 +34,7 @@
   - `autobank <guild/g>` toggles banking to guild bank. **Default Off**. 
 
 ## Blacklist
-  If no blacklist.json file is found, it will be using the default blacklist.
+  If no `blacklist.json` file was found, it will be using the default blacklist.
   - Editing/modifying the blacklist using blacklisting commands will be saved into the `blacklist.json` file.
   - You can get the id of any item from [this site](https://teralore.com/en/).
   <details>
@@ -94,6 +96,8 @@
     - ? It have banked all the way until full page and continued in next page.
     - ? It have banked same item in 2 different pages.
       - A: Its impossible, script will never bank an item in different page, even if page is full. (Make sure you don't already have that item in different pages, aka see duplication log).
+    - ? It moved my items from pocket/inventory to other pockets or to inventory.
+      - A: Its client behaviour, works only for ¹stacked items. If a stacked item has more amount in slot than the other slot, and you banked it; the less amount one will be moved from the 'other slot' to get in place of the banked one. ¹Unstacked items are unaffected.
 
 ## Proof of concept
   <details>
