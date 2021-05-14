@@ -22,7 +22,8 @@
           > `ab bl +` ~ Toggles blacklisting.<br>`ab bl rmv` ~ Toggles unblacklisting.
           - Open bank, then try add that item to bank to (un)blacklist it.
             * Note: Item will not be banked while this enabled.
-        ○ ○ If you want to blacklist entire pocket tab, say you want to keep superior items there, don't want them to get banked at all, no matter if they exist in bank or blacklist or not, you can do that using: (case-insensitive)
+        ---
+        ○ Additionally; If you want to blacklist entire pocket tab, say you want to keep superior items there, don't want them to get banked at all, no matter if they exist in bank or blacklist or not, you can do that using: (case-insensitive)
           > `ab bl + pocket1 PocKet2 pocket3`<br>`ab bl - pocKET1 pocket2 pocket3`
     * `ab bl <reset/default>`:
       - This command resets the blacklist to the [default blacklist](#Blacklist).
