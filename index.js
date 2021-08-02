@@ -92,13 +92,13 @@ module.exports = function AutoBank(mod) {
 			resetValues()
 		}
 	}
-	//function sSytemMessage(event) { if (enabled && mod.parseSystemMessage(event.message).id === 'SMT_WAREHOUSE_FULL') return false }
+	//function sSytemMessage(event) { if (Enabled && mod.parseSystemMessage(event.message).id === 'SMT_WAREHOUSE_FULL') return false }
 
 	// ~~~ * Hooks * ~~~ \\
 
 	mod.hook('S_VIEW_WARE_EX', defs.sViewWareEx, sViewWareEx)
 	mod.hook('C_PUT_WARE_ITEM', defs.cPutWareItem, cPutWareItem)
-	mod.hook('S_REQUEST_CONTRACT', 1, sRequestContract)
+	mod.hook('S_REQUEST_CONTRACT', mod.majorPatchVersion > 107 ? 2 : 1, sRequestContract)
 	mod.hook('S_CANCEL_CONTRACT', 1, sCancelContract)
 	//mod.hook('S_SYSTEM_MESSAGE', 1, sSytemMessage)
 
@@ -151,7 +151,7 @@ module.exports = function AutoBank(mod) {
 
 	// ~~~ * Command Functions * ~~~ \\
 
-	const Msg = msg => mod.command.message(`${NotCP ? '[Auto-Bank]' : ''} ${msg}`),
+	const Msg = msg => mod.command.message(`${NotCP ? '[<font color="#0ff1ce">Auto-Bank</font>]' : ''} ${msg}`),
 		resetValues = () => {
 			if (AddToBl) toggleAddToBl()
 			if (RmvFromBl) toggleRmvFromBl()

@@ -86,7 +86,7 @@
   * 1 dependency;
     - tera-game-state
       - If you're using Caali's proxy(toolbox), you don't have to do anything, as this comes along-with by default.
-      - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`[proxy dir]/mods`).
+      - If you're using Pinkie's proxy, you will have to get it, via [this LINK](https://github.com/tera-mods-forks/tera-game-state) & place it in your mods folder (`[proxy dir]/mods/`).
 
 ## Additional information
   It will also send a warning if the same exact item is available in more than one page (i.e. Duplicate) in your storage space. (the warning will include a blue clickable links, you can click it to show the item).
@@ -98,7 +98,7 @@
     - ? It have banked same item in 2 different pages.
       - A: Its impossible, script will never bank an item in different page, even if page is full. (Make sure you don't already have that item in different pages, aka see duplication log).
     - ? It moved my items from pocket/inventory to other pockets or to inventory.
-      - A: Its client behaviour, works only for ¹stacked items. If a stacked item has more amount in slot than the other slot, and you banked it; the less amount one will be moved from the 'other slot' to get in place of the banked one. ¹Unstacked items are unaffected.
+      - A: Its client behaviour, works only for ¹stacked items. If a stacked item has more amount in slot than the other slot, and you banked it; the less amount one will be moved from the 'other slot' to get in place of the banked one. ¹Unstackable items are unaffected.
 
 ## Proof of concept
   <details>

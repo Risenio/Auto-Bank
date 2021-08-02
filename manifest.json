@@ -1,7 +1,7 @@
 {
     "files": {
-        "README.md": "9aad6fc5c7fa9e5cefa503cb5c5950b96a1d9f5c889d3c7d8d4f6383a4043992",
-        "index.js": "f970e24fcecf5f9cd4d11a045f3182cb7edb65be42e85bb237447fc3c2349214",
+        "README.md": "965012806ad7acf9ad4b81d58537a71e934d362c31becf538251fa5d45c3302b",
+        "index.js": "4ac0d44f5661fc718247c5a9c9399eb91ade264b007676eff3610bba3dd0494f",
         "module.json": "df54235a322877d003fa9a33d00cc19aaa8fb0808782399179e34d4e191fba8a",
         "package.json": "b9e2b74cb3dfef6d72d3829b2df3ca9d516c84e40daf22c8d141151c33769396"
     },
@@ -10,7 +10,7 @@
         "C_PUT_WARE_ITEM": 3,
         "C_VIEW_WARE": 2,
         "S_CANCEL_CONTRACT": 1,
-        "S_REQUEST_CONTRACT": 1,
+        "S_REQUEST_CONTRACT": [1, 2],
         "S_VIEW_WARE_EX": 3
     }
 }
